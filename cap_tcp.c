@@ -118,7 +118,7 @@ u_char* handle_IP(u_char *args, const struct pcap_pkthdr * pkthdr, const u_char 
             fprintf(stdout,"%s:", inet_ntoa(ip->ip_src));
             fprintf(stdout,"%d-->%s:%d\n", th_sport, inet_ntoa(ip->ip_dst), th_dport);
 
-//          下面这行输出的源地址和目的地址一样，不知道什么bug
+//          下面这行输出的目的地址和源地址一样，不知道什么bug
 //          fprintf(stdout,"%s:%d-->%s:%d\n", inet_ntoa(ip->ip_src), th_sport, inet_ntoa(ip->ip_dst), th_dport);
 	}
     }
