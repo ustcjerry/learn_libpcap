@@ -16,8 +16,6 @@
 #define ETHER_HDRLEN 14
 #endif
 
-
-
 u_int16_t handle_ethernet
         (u_char *args,const struct pcap_pkthdr* pkthdr,const u_char*
         packet);
@@ -26,6 +24,7 @@ u_char* handle_IP
         packet);
 
 typedef	uint32_t	tcp_seq;
+
 /*
  * TCP header.
  * Per RFC 793, September, 1981.
@@ -41,7 +40,6 @@ struct tcphdr {
 	uint16_t	th_sum;			/* checksum */
 	uint16_t	th_urp;			/* urgent pointer */
 } UNALIGNED;
-
 
 /*
  * Structure of an internet header, naked of options.
@@ -69,7 +67,6 @@ struct my_ip {
     struct in_addr ip_src,ip_dst;      /* source and dest address */
 };
 
-
 /* looking at ethernet headers */
 void my_callback(u_char *args,const struct pcap_pkthdr* pkthdr,const u_char*packet)
 {
@@ -78,11 +75,9 @@ void my_callback(u_char *args,const struct pcap_pkthdr* pkthdr,const u_char*pack
     if(type == ETHERTYPE_IP)
     {/* handle IP packet */
         handle_IP(args,pkthdr,packet);
-
     }else if(type == ETHERTYPE_ARP)
     {/* handle arp packet */
-    }
-    else if(type == ETHERTYPE_REVARP)
+    }else if(type == ETHERTYPE_REVARP)
     {/* handle reverse arp packet */
     }
 }
@@ -97,7 +92,7 @@ u_char* handle_IP(u_char *args, const struct pcap_pkthdr * pkthdr, const u_char 
     const u_char *cp;
     int len;
     uint16_t	th_sport;		/* source port */
-	uint16_t	th_dport;		/* destination port */
+    uint16_t	th_dport;		/* destination port */
 
     struct tm *ltime;
     char timestr[16];
@@ -109,7 +104,7 @@ u_char* handle_IP(u_char *args, const struct pcap_pkthdr * pkthdr, const u_char 
     off = ntohs(ip->ip_off);
     if((off & 0x1fff) == 0 )/* aka no 1's in first 13 bits */
     {
-		if(ip->ip_p== IPPROTO_TCP){
+	if(ip->ip_p== IPPROTO_TCP){
 
             tp = (struct tcphdr*)(packet + sizeof(struct ether_header)+sizeof(struct my_ip));
             th_sport=ntohs(tp->th_sport);
@@ -122,11 +117,11 @@ u_char* handle_IP(u_char *args, const struct pcap_pkthdr * pkthdr, const u_char 
             printf("tcp ");
             fprintf(stdout,"%s:", inet_ntoa(ip->ip_src));
             fprintf(stdout,"%d-->%s:%d\n", th_sport, inet_ntoa(ip->ip_dst), th_dport);
-		}
+
+//          下面这行输出的源地址和目的地址一样，不知道什么bug
+//          fprintf(stdout,"%s:%d-->%s:%d\n", inet_ntoa(ip->ip_src), th_sport, inet_ntoa(ip->ip_dst), th_dport);
+	}
     }
-
-
-
     return NULL;
 }
 
@@ -153,11 +148,11 @@ u_int16_t handle_ethernet
     ether_type = ntohs(eptr->ether_type);
 
     /* Lets print SOURCE DEST TYPE LENGTH */
-  //  fprintf(stdout,"ETH: ");
-  //  fprintf(stdout,"%s "
- //           ,ether_ntoa((struct ether_addr*)eptr->ether_shost));
-   // fprintf(stdout,"%s "
-   //         ,ether_ntoa((struct ether_addr*)eptr->ether_dhost));
+//  fprintf(stdout,"ETH: ");
+//  fprintf(stdout,"%s "
+//         ,ether_ntoa((struct ether_addr*)eptr->ether_shost));
+//  fprintf(stdout,"%s "
+//         ,ether_ntoa((struct ether_addr*)eptr->ether_dhost));
 
     /* check to see if we have an ip packet */
     if (ether_type == ETHERTYPE_IP)
