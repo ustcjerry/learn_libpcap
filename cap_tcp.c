@@ -112,7 +112,7 @@ u_char* handle_IP(u_char *args, const struct pcap_pkthdr * pkthdr, const u_char 
 
             ltime=localtime(&pkthdr->ts.tv_sec);
             strftime( timestr, sizeof (timestr), "%H:%M:%S", ltime);
-            printf("%s.%.6d \n", timestr, pkthdr->ts.tv_usec);
+            printf("%s.%.6d \n", timestr, (int)pkthdr->ts.tv_usec);
 
             printf("tcp ");
             fprintf(stdout,"%s:", inet_ntoa(ip->ip_src));
