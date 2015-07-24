@@ -120,6 +120,9 @@ u_char* handle_IP(u_char *args, const struct pcap_pkthdr * pkthdr, const u_char 
 
 //          下面这行输出的目的地址和源地址一样，不知道什么bug
 //          fprintf(stdout,"%s:%d-->%s:%d\n", inet_ntoa(ip->ip_src), th_sport, inet_ntoa(ip->ip_dst), th_dport);
+// 	    update:
+//		inet_ntoa() 函数使用相同缓冲区导致 
+//		see: http://stackoverflow.com/a/18593238/4725840
 	}
     }
     return NULL;
